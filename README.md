@@ -201,10 +201,10 @@ echo "" > ~/.bash_history && history -c && exit
 
 
 
-### Python Config 2024
+### Python Config.
 
 
-Para actualizar a Python 3.13 en tu Ubuntu Server 22.04, puedes seguir estos pasos:
+Para actualizar a Python 3.** en tu Ubuntu Server 22.04, puedes seguir estos pasos:
 
 1. **Actualizar el sistema**:
    Abre una terminal y ejecuta:
@@ -222,18 +222,18 @@ Para actualizar a Python 3.13 en tu Ubuntu Server 22.04, puedes seguir estos pas
    libdb5.3-dev libgmp3-dev libmpfr-dev libmpc-dev libgmp-dev
    ```
 
-3. **Descargar Python 3.13**:
-   Ve a la página oficial de Python (https://www.python.org/downloads/source/) y copia el enlace de la versión 3.13. Luego ejecuta:
+3. **Descargar Python 3.**:
+   Ve a la página oficial de Python (https://www.python.org/downloads/source/) y copia el enlace de la versión 3.14. Luego ejecuta:
    ```bash
    cd /usr/src
-   sudo wget https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tgz
-   sudo tar xzf Python-3.13.0.tgz
+   sudo wget https://www.python.org/ftp/python/3.14.0/Python-3.14.0.tgz
+   sudo tar xzf Python-3.14.0.tgz
    ```
 
 4. **Compilar e instalar Python**:
    Cambia al directorio de Python y compílalo:
    ```bash
-   cd Python-3.13.0
+   cd Python-3.14.0
    sudo ./configure --enable-optimizations
    sudo make altinstall
    ```
@@ -241,32 +241,32 @@ Para actualizar a Python 3.13 en tu Ubuntu Server 22.04, puedes seguir estos pas
    **Nota**: Usamos `make altinstall` para evitar sobrescribir la versión predeterminada de Python que viene con Ubuntu.
 
 5. **Verificar la instalación**:
-   Después de la instalación, verifica que Python 3.13 esté disponible ejecutando:
+   Después de la instalación, verifica que Python 3.14 esté disponible ejecutando:
    ```bash
-   python3.13 --version
+   python3.14 --version
    ```
 
 6. **Crear un enlace simbólico (opcional)**:
-   Si deseas usar `python3` para referenciar Python 3.13, puedes crear un enlace simbólico:
+   Si deseas usar `python3` para referenciar Python 3.14, puedes crear un enlace simbólico:
    ```bash
-   sudo ln -s /usr/local/bin/python3.13 /usr/bin/python3
+   sudo ln -s /usr/local/bin/python3.14 /usr/bin/python3
    ```
 
-Con estos pasos, deberías tener Python 3.13 instalado en tu Ubuntu Server 22.04.
+Con estos pasos, deberías tener Python 3.14 instalado en tu Ubuntu Server 22.04.
 
 
 
-Para hacer que Python 3.13 sea la versión predeterminada en tu Ubuntu Server 22.04, puedes seguir estos pasos después de instalar Python 3.13:
+Para hacer que Python 3.14 sea la versión predeterminada en tu Ubuntu Server 22.04, puedes seguir estos pasos después de instalar Python 3.14:
 
 1. **Crear un enlace simbólico para `python3`**:
-   Si ya has instalado Python 3.13 y deseas que sea la versión utilizada por defecto al ejecutar `python3`, puedes crear un enlace simbólico. Primero, asegúrate de que el enlace no exista ya:
+   Si ya has instalado Python 3.14 y deseas que sea la versión utilizada por defecto al ejecutar `python3`, puedes crear un enlace simbólico. Primero, asegúrate de que el enlace no exista ya:
 
    ```bash
-   sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.13 2
+   sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.14 2
       sudo apt install python-is-python3
    ```
 
-   Esto añade Python 3.13 a la lista de alternativas para `python3` y le asigna una prioridad de `2`.
+   Esto añade Python 3.14 a la lista de alternativas para `python3` y le asigna una prioridad de `2`.
 
 2. **Configurar la versión predeterminada**:
    Puedes usar el siguiente comando para seleccionar la versión que deseas usar por defecto:
@@ -275,15 +275,15 @@ Para hacer que Python 3.13 sea la versión predeterminada en tu Ubuntu Server 22
    sudo update-alternatives --config python3
    ```
 
-   Esto te mostrará una lista de las versiones de Python 3 instaladas. Ingresa el número correspondiente a Python 3.13 y presiona Enter.
+   Esto te mostrará una lista de las versiones de Python 3 instaladas. Ingresa el número correspondiente a Python 3.14 y presiona Enter.
 
 3. **Verificar la configuración**:
-   Para asegurarte de que `python3` ahora apunta a Python 3.13, ejecuta:
+   Para asegurarte de que `python3` ahora apunta a Python 3.14, ejecuta:
 
    ```bash
    python3 --version
    ```
 
-Si todo está correcto, deberías ver que la versión predeterminada es Python 3.13. 
+Si todo está correcto, deberías ver que la versión predeterminada es Python 3.14. 
 
 Recuerda que cambiar la versión predeterminada de Python puede afectar a otros programas y scripts que dependen de la versión original que viene con Ubuntu, así que ten cuidado al hacer estos cambios.
