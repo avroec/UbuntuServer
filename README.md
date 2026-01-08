@@ -22,7 +22,7 @@ sudo apt install -y nginx
 sudo snap install certbot --classic
 ```
 ```bash
-sudo mv /etc/nginx/sites-available/defaut /etc/nginx/sites-available/AQUICAMBIAR.conf
+sudo mv /etc/nginx/sites-available/defaut /etc/nginx/sites-available/NOMBRE.conf
 ```
 ```bash
 sudo rm -rf /etc/nginx/sites-enabled/defaut
