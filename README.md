@@ -39,7 +39,7 @@ sudo systemctl restart nginx
 ### Agregar configuración.
 
 ```bash
-sudo nano /etc/nginx/sites-available/AQUICAMBIAR.conf
+sudo nano /etc/nginx/sites-available/NOMBRE.conf
 ```
 
 ### Code Server.
