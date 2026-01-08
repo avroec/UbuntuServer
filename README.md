@@ -28,7 +28,7 @@ sudo mv /etc/nginx/sites-available/defaut /etc/nginx/sites-available/NOMBRE.conf
 sudo rm -rf /etc/nginx/sites-enabled/defaut
 ```
 ```bash
-sudo ln -s /etc/nginx/sites-available/AQUICAMBIAR.conf /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/NOMBRE.conf /etc/nginx/sites-enabled/
 ```
 ```bash
 sudo nginx -t
@@ -63,7 +63,7 @@ sudo systemctl start code-server@$USER
 sudo systemctl enable --now code-server@$USER
 ```
 ```bash
-sudo nano /etc/nginx/sites-available/AQUICAMBIAR.conf
+sudo nano /etc/nginx/sites-available/NOMBRE.conf
 ```
 ```bash
 server {
