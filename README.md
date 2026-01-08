@@ -51,10 +51,10 @@ curl -fsSL https://code-server.dev/install.sh | sh
 Abrir este link: [Release Code](https://github.com/coder/code-server/releases)
 
 ```bash
-wget https://github.com/coder/code-server/releases/download/v4.xx/xx_amd64.deb
+wget https://github.com/coder/code-server/releases/download/v4.**/**_amd64.deb
 ```
 ```bash
-sudo apt install ./code-server_*_amd64.deb
+sudo apt install ./code-server_**_amd64.deb
 ```
 ```bash
 sudo systemctl start code-server@$USER
@@ -84,6 +84,9 @@ server {
 ```
 ```bash
 nano ~/.config/code-server/config.yaml
+```
+```bash
+sudo systemctl restart code-server@$USER
 ```
 
 ### Uninstallation or remove Code Server.
