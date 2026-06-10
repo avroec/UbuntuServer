@@ -1,6 +1,6 @@
 # Guía de Lineamientos y Buenas Prácticas para Creación de Proyectos
 
-**Versión:** 5.0
+**Versión:** 6.0
 
 Este documento establece los principios, estándares y procesos que deben seguirse al crear y mantener un proyecto de software. Las recomendaciones aquí descritas aplican a cualquier lenguaje, framework o plataforma. El enfoque está en **cómo pensar y planificar**, no en qué herramientas específicas usar.
 
@@ -10,7 +10,7 @@ Este documento establece los principios, estándares y procesos que deben seguir
 
 1. [Filosofía General](#1-filosofía-general)
 2. [Metodología Spec-Driven](#2-metodología-spec-driven)
-3. [Fase 0: Especificación y Plan](#3-fase-0-especificación-y-plan)
+3. [Especificación y Plan](#3-especificación-y-plan)
 4. [Stack y Dependencias](#4-stack-y-dependencias)
 5. [Arquitectura y Diseño](#5-arquitectura-y-diseño)
 6. [Estándares de Código](#6-estándares-de-código)
@@ -25,6 +25,8 @@ Este documento establece los principios, estándares y procesos que deben seguir
 15. [Verificación y Pruebas](#15-verificación-y-pruebas)
 16. [Checklist de Auditoría y Consultas](#16-checklist-de-auditoría-y-consultas)
 17. [Accesibilidad](#17-accesibilidad)
+18. [Adopción y Migración](#18-adopción-y-migración)
+19. [Glosario](#19-glosario)
 
 ---
 
@@ -33,6 +35,8 @@ Este documento establece los principios, estándares y procesos que deben seguir
 ### 1.1. Primero el Plan, Después el Código
 
 Nunca escribir código sin haber definido antes las especificaciones y el plan de implementación. El plan debe tener checkboxes y fases claras. Esto aplica al proyecto completo y a cada feature individual.
+
+> **Ver también:** La sección [2. Metodología Spec-Driven](#2-metodología-spec-driven) detalla el ciclo completo, los roles de `/spec`, `/plan` y `/.skills`, y el flujo de trabajo paso a paso.
 
 > **Ejemplo práctico:** Antes de implementar un sistema de autenticación, documenta: qué método se usará (tokens, sesiones, OAuth), qué endpoints existirán, qué datos se almacenan, y qué flujos de error se manejan.
 
@@ -44,7 +48,7 @@ Toda decisión técnica importante debe quedar documentada. Si no está escrita,
 - Qué alternativas se descartaron y por qué
 - Cuáles son las restricciones y trade-offs aceptados
 
-### 1.3. Canonical Source of Truth
+### 1.3. Fuente Única de Verdad (Source of Truth)
 
 Designar archivos específicos como la fuente de verdad del proyecto:
 
@@ -68,7 +72,7 @@ El proyecto debe poder construirse desde cero siguiendo solo los archivos de doc
 
 ## 2. Metodología Spec-Driven
 
-Spec-Driven (Desarrollo Guiado por Especificaciones) es una metodología donde las especificaciones son el centro del desarrollo. En lugar de empezar con código, se comienza con especificaciones claras y verificables.
+Spec-Driven (Desarrollo Guiado por Especificaciones) es una metodología donde las especificaciones son el centro del desarrollo. En lugar de empezar con código, se comienza con especificaciones claras y verificables. Los tres pilares son **spec** (qué), **plan** (cómo) y **skills** (quién ejecuta).
 
 ### 2.1. ¿Para qué sirve?
 
@@ -77,16 +81,31 @@ b) **Verificación objetiva** — Las specs se convierten en criterios de acepta
 c) **Comunicación clara** — Todo el equipo comparte la misma interpretación
 d) **Reducir retrabajo** — Menos cambios costosos después de implementar
 
+> **Para equipos que migran proyectos existentes:** Ver la sección [18. Adopción y Migración](#18-adopción-y-migración) para estrategias de adopción incremental.
+
 ### 2.2. Ciclo Spec-Driven
 
 El ciclo se repite para cada feature o componente:
 
 1. **Escribir especificaciones** — Describir *qué* debe hacer el sistema (el "qué" vive en `/spec`)
 2. **Crear el plan** — Describir *cómo* se implementará (el "cómo" vive en `/plan`)
-3. **Validar** — Revisar que las specs sean correctas, completas y consistentes
+3. **Validar** — Revisar que las specs sean correctas, completas y consistentes (ver criterios en [2.2.1](#221-criterios-de-validación-de-especificaciones))
 4. **Implementar** — Escribir código que cumpla las especificaciones
 5. **Verificar** — Confirmar que la implementación cumple las specs (tests, auditoría, revisión)
 6. **Iterar** — Si la verificación falla, corregir la implementación o ajustar las specs
+
+#### 2.2.1. Criterios de Validación de Especificaciones
+
+Antes de pasar a la fase de implementación, cada especificación debe cumplir estos criterios:
+
+- [ ] **Completitud:** Cubre todos los flujos principales, incluyendo casos de error y edge cases
+- [ ] **Consistencia:** No hay contradicciones entre las secciones de la spec
+- [ ] **Verificabilidad:** Cada requisito puede ser confirmado con un test, auditoría o inspección manual
+- [ ] **Alcance definido:** La spec describe un componente o feature con límites claros
+- [ ] **Dependencias explícitas:** Las interacciones con otros componentes están documentadas
+- [ ] **Revisión cruzada:** Al menos una persona distinta del autor revisó la spec
+
+> **Regla práctica:** Si no puedes escribir un test de aceptación para un requisito de la spec, el requisito no está lo suficientemente claro.
 
 ### 2.3. Regla de Oro: el "qué", el "cómo" y el "quién"
 
@@ -106,6 +125,8 @@ Para iniciar un proyecto nuevo o una feature importante, crear los directorios e
 2. /plan/        → Definir el CÓMO
 3. /.skills/     → Configurar los EXPERTOS que ejecutan basándose en spec y plan
 ```
+
+> **Sobre la convención `/.skills`:** El punto inicial (`.`) sigue la convención de directorios ocultos/sistémicos (como `.git`, `.github`). Esto indica que `/.skills` es un directorio de configuración interna del proyecto, no una carpeta de código fuente. Los skills no se distribuyen como artefactos de la aplicación — son herramientas de desarrollo que viven junto al proyecto pero no forman parte del build de producción.
 
 #### Paso 1: Crear `/spec/` — Las Especificaciones
 
@@ -137,9 +158,47 @@ Una vez que `/spec/` y `/plan/` están definidos, configurar los expertos (agent
 
 > **Regla fundamental:** Los skills se crean DESPUÉS de spec y plan porque necesitan saber QUÉ construir y CÓMO hacerlo para poder actuar como expertos. Un skill sin spec y plan es un experto sin contexto.
 
+### 2.5. Formato de Archivos y Convenciones de Nombre
+
+Los directorios `/spec` y `/plan` deben seguir convenciones claras para que sean mantenibles y navegables:
+
+**Formato recomendado:**
+- Usar **Markdown** (`.md`) como formato estándar para specs y planes — es legible, versionable y universal
+- Un archivo principal de especificación (por ejemplo `SPEC.md`) que contenga la visión general
+- Archivos adicionales por feature o componente cuando la spec crezca (por ejemplo `auth-spec.md`, `payments-spec.md`)
+
+**Convenciones de nombre:**
+- Nombres descriptivos en minúsculas con guiones: `user-management-spec.md`
+- Prefijo del directorio al que pertenecen: `/spec/auth-spec.md`, `/plan/auth-plan.md`
+- Evitar abreviaciones ambiguas: `payments-spec.md` en lugar de `pay-s.md`
+
+**Estructura mínima de una spec:**
+```markdown
+# [Nombre del Componente/Feature]
+## Objetivo
+## Restricciones
+## Flujos
+## Variables de Entorno
+## Criterios de Aceptación
+```
+
+**Estructura mínima de un plan:**
+```markdown
+# [Nombre del Componente/Feature] — Plan
+## Fase 1: [Nombre]
+- [ ] Paso 1.1
+- [ ] Paso 1.2
+## Fase 2: [Nombre]
+- [ ] Paso 2.1
+## Comandos de Verificación
+## Notas Técnicas
+```
+
+> **Nota:** Las convenciones de nombre son una guía, no una restricción rígida. Lo importante es la consistencia dentro del proyecto. Definir la convención en la spec inicial y respetarla.
+
 ---
 
-## 3. Fase 0: Especificación y Plan
+## 3. Especificación y Plan
 
 ### 3.1. Crear Especificaciones Primero
 
@@ -192,7 +251,7 @@ Cada dependencia debe justificarse respondiendo tres preguntas:
 2. ¿Podemos resolverlo con las capacidades nativas del lenguaje?
 3. ¿El beneficio justifica el costo (tamaño, complejidad, superficie de ataque, mantenimiento)?
 
-### 4.4. Sources of Truth para Versiones
+### 4.4. Fuentes de Verdad para Versiones
 
 No asumir. Investigar en:
 
@@ -495,6 +554,8 @@ Definir qué se prueba y con qué nivel de detalle:
 | **Unit** | Funciones/clases aisladas | Rápido | Muchos |
 | **Integration** | Interacción entre módulos | Medio | Moderados |
 | **E2E** | Flujos completos de usuario | Lento | Pocos |
+| **Security** | Vulnerabilidades y superficie de ataque | Variable | Moderados |
+| **Performance** | Latencia, throughput, uso de recursos | Variable | Pocos |
 
 ### 15.2. Verificar Después de Cada Cambio
 
@@ -515,6 +576,29 @@ Incluir en la documentación comandos exactos para verificar:
 ### 15.4. Lo que No se Compila, No Existe
 
 Si no compila, no funciona. Si no se puede verificar, no está completo. El proyecto debe poder verificarse con comandos simples ejecutables por cualquier desarrollador.
+
+### 15.5. Testing de Seguridad
+
+Incluir en la estrategia de testing:
+
+a) **Análisis estático:** Herramientas SAST para detectar vulnerabilidades en el código fuente
+b) **Dependencias:** Escaneo automático de dependencias con vulnerabilidades conocidas (e.g., `npm audit`, `pip audit`)
+c) **Autenticación:** Verificar que endpoints protegidos rechazan accesos no autorizados
+d) **Inyección:** Probar inputs maliciosos en formularios y parámetros de URL
+e) **Secretos:** Verificar que no hay secretos hardcodeados en el código o en el historial de git
+
+> **Nota:** Referenciar la sección [9. Seguridad](#9-seguridad) para los principios que estas pruebas deben validar.
+
+### 15.6. Testing de Rendimiento
+
+Incluir en la estrategia de testing:
+
+a) **Benchmarks base:** Establecer métricas de referencia (latencia, throughput) desde las primeras versiones
+b) **Carga:** Probar con volúmenes de datos y tráfico esperados en producción
+c) **Degradación:** Verificar comportamiento bajo estrés (timeouts, memory leaks, connection pooling)
+d) **Regresión:** Comparar métricas contra benchmarks base después de cada cambio significativo
+
+> **Nota:** Referenciar la sección [14. Rendimiento](#14-rendimiento) para las estrategias que estas pruebas deben cubrir.
 
 ---
 
@@ -556,11 +640,13 @@ Antes de dar por completada una fase, un feature o el proyecto completo, ejecuta
 - [ ] ¿Se realizó simulación de navegador para verificar la experiencia?
 - [ ] ¿Se ejecutaron pruebas de navegador en múltiples dispositivos y resoluciones?
 
-### 16.6. Documentación y Proceso
+### 16.6. Documentación, Proceso y Skills
 
 - [ ] ¿Se aplicó la metodología spec-driven (el "qué" en `/spec` y el "cómo" en `/plan`)?
 - [ ] ¿Se documentaron las especificaciones del plan de creación?
 - [ ] ¿Se documentaron las especificaciones del plan de integración?
+- [ ] ¿Se configuraron los skills/expertos en `/.skills` referenciando `/spec` y `/plan`?
+- [ ] ¿Los skills están alineados con las especificaciones y no las contradicen?
 - [ ] ¿Se generó un resumen de lo realizado?
 
 ### 16.7. Verificación Final
@@ -598,4 +684,53 @@ c) Documentar y trackear issues de accesibilidad como bugs prioritarios
 
 ---
 
-*FIN DE LA GUÍA — v5.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
+## 18. Adopción y Migración
+
+> **Nota:** Esta sección aplica a equipos que adoptan Spec-Driven en proyectos existentes.
+
+### 18.1. Adopción Gradual
+
+Spec-Driven no requiere un cambio radical. Adoptarlo de forma incremental:
+
+1. **Empezar por una feature nueva o en desarrollo:** Aplicar el ciclo completo (spec → plan → skills) en un scope pequeño
+2. **Documentar lo que ya existe:** Crear specs retrospectivas para componentes críticos del proyecto — no necesitan ser perfectas, solo útiles
+3. **Evitar el Big Bang:** No intentar documentar todo el proyecto de golpe. Priorizar por riesgo y actividad reciente
+
+### 18.2. Proyectos sin `/spec` ni `/plan`
+
+Si el proyecto ya tiene código pero no sigue Spec-Driven:
+
+a) Crear `/spec/` con al menos: stack, arquitectura, variables de entorno, flujos principales
+b) Crear `/plan/` con al menos: fases pendientes, deuda técnica conocida, próximos features
+c) A partir de ahí, todo trabajo nuevo sigue el ciclo completo
+d) No refactorizar solo para "alinear con la spec" — hacerlo cuando se toque el componente por otras razones
+
+### 18.3. Métricas de Adopción
+
+Para medir si la metodología está funcionando:
+
+a) **Reducción de retrabajo:** ¿Se están haciendo menos cambios después de implementar?
+b) **Claridad de requisitos:** ¿Se reducen las preguntas durante la implementación?
+c) **Velocidad de onboarding:** ¿Los nuevos miembros del equipo entienden el proyecto más rápido?
+d) **Cobertura de specs:** ¿Qué porcentaje del proyecto tiene specs actualizadas?
+
+---
+
+## 19. Glosario
+
+| Término | Definición |
+|---------|------------|
+| **Spec (especificación)** | Documento que describe *qué* debe hacer el sistema, sus restricciones, flujos y datos. Vive en `/spec`. |
+| **Plan** | Documento que describe *cómo* se implementará el sistema, con fases, pasos y comandos. Vive en `/plan`. |
+| **Skill** | Definición de un experto o agente que ejecuta, verifica o audita basándose en spec y plan. Vive en `/.skills`. |
+| **Spec-Driven** | Metodología de desarrollo donde las especificaciones son el centro del proceso. Se escribe *qué* antes de *cómo*. |
+| **Source of Truth** | Archivos designados como la fuente de verdad del proyecto (specs, plan, documentación). El código debe reflejarlos. |
+| **Fase** | Un conjunto de pasos relacionados en el plan de implementación, ordenados por dependencia. |
+| **Criterio de aceptación** | Condición verificable que debe cumplirse para considerar completa una feature o fase. |
+| **Checklist de auditoría** | Lista de verificación que se ejecuta antes de dar por completada una fase o el proyecto, cubriendo calidad de código, funcionalidad, seguridad, documentación y verificación final. |
+| **Reproducibilidad** | Capacidad de construir el proyecto desde cero siguiendo solo la documentación. |
+| **Wrapper** | Capa de abstracción propia que envuelve una librería externa para adaptarla a las necesidades del proyecto. |
+
+---
+
+*FIN DE LA GUÍA — v6.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
