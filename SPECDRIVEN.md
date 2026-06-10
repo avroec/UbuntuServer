@@ -1,6 +1,6 @@
 # Guía de Lineamientos y Buenas Prácticas para Creación de Proyectos
 
-**Versión:** 3.0
+**Versión:** 4.0
 
 Este documento establece los principios, estándares y procesos que deben seguirse al crear y mantener un proyecto de software. Las recomendaciones aquí descritas aplican a cualquier lenguaje, framework o plataforma. El enfoque está en **cómo pensar y planificar**, no en qué herramientas específicas usar.
 
@@ -9,20 +9,22 @@ Este documento establece los principios, estándares y procesos que deben seguir
 ## Tabla de Contenidos
 
 1. [Filosofía General](#1-filosofía-general)
-2. [Fase 0: Especificación y Plan](#2-fase-0-especificación-y-plan)
-3. [Stack y Dependencias](#3-stack-y-dependencias)
-4. [Arquitectura y Diseño](#4-arquitectura-y-diseño)
-5. [Estándares de Código](#5-estándares-de-código)
-6. [Componentes y Librerías Externas](#6-componentes-y-librerías-externas)
-7. [Manejo de Errores y Resiliencia](#7-manejo-de-errores-y-resiliencia)
-8. [Seguridad](#8-seguridad)
-9. [Entorno de Desarrollo](#9-entorno-de-desarrollo)
-10. [Build y Despliegue](#10-build-y-despliegue)
-11. [CI/CD y Automatización](#11-cicd-y-automatización)
-12. [Monitoreo y Observabilidad](#12-monitoreo-y-observabilidad)
-13. [Rendimiento](#13-rendimiento)
-14. [Verificación y Pruebas](#14-verificación-y-pruebas)
-15. [Accesibilidad](#15-accesibilidad)
+2. [Metodología Spec-Driven](#2-metodología-spec-driven)
+3. [Fase 0: Especificación y Plan](#3-fase-0-especificación-y-plan)
+4. [Stack y Dependencias](#4-stack-y-dependencias)
+5. [Arquitectura y Diseño](#5-arquitectura-y-diseño)
+6. [Estándares de Código](#6-estándares-de-código)
+7. [Componentes y Librerías Externas](#7-componentes-y-librerías-externas)
+8. [Manejo de Errores y Resiliencia](#8-manejo-de-errores-y-resiliencia)
+9. [Seguridad](#9-seguridad)
+10. [Entorno de Desarrollo](#10-entorno-de-desarrollo)
+11. [Build y Despliegue](#11-build-y-despliegue)
+12. [CI/CD y Automatización](#12-cicd-y-automatización)
+13. [Monitoreo y Observabilidad](#13-monitoreo-y-observabilidad)
+14. [Rendimiento](#14-rendimiento)
+15. [Verificación y Pruebas](#15-verificación-y-pruebas)
+16. [Checklist de Auditoría y Consultas](#16-checklist-de-auditoría-y-consultas)
+17. [Accesibilidad](#17-accesibilidad)
 
 ---
 
@@ -64,9 +66,47 @@ El proyecto debe poder construirse desde cero siguiendo solo los archivos de doc
 
 ---
 
-## 2. Fase 0: Especificación y Plan
+## 2. Metodología Spec-Driven
 
-### 2.1. Crear Especificaciones Primero
+Spec-Driven (Desarrollo Guiado por Especificaciones) es una metodología donde las especificaciones son el centro del desarrollo. En lugar de empezar con código, se comienza con especificaciones claras y verificables.
+
+### 2.1. ¿Para qué sirve?
+
+a) **Definir antes de implementar** — Reduce ambigüedad antes de escribir código
+b) **Verificación objetiva** — Las specs se convierten en criterios de aceptación
+c) **Comunicación clara** — Todo el equipo comparte la misma interpretación
+d) **Reducir retrabajo** — Menos cambios costosos después de implementar
+
+### 2.2. Ciclo Spec-Driven
+
+El ciclo se repite para cada feature o componente:
+
+1. **Escribir especificaciones** — Describir *qué* debe hacer el sistema (el "qué" vive en `/spec`)
+2. **Crear el plan** — Describir *cómo* se implementará (el "cómo" vive en `/plan`)
+3. **Validar** — Revisar que las specs sean correctas, completas y consistentes
+4. **Implementar** — Escribir código que cumpla las especificaciones
+5. **Verificar** — Confirmar que la implementación cumple las specs (tests, auditoría, revisión)
+6. **Iterar** — Si la verificación falla, corregir la implementación o ajustar las specs
+
+### 2.3. Regla de Oro: el "qué" y el "cómo"
+
+- **`/spec`** define el *qué*: qué hace el sistema, qué datos maneja, qué restricciones tiene
+- **`/plan`** define el *cómo*: cómo se implementa, qué pasos seguir, qué orden respetar
+- El código es la consecuencia de ambos, nunca la fuente de verdad
+
+### 2.4. Flujo de Trabajo Paso a Paso
+
+Para iniciar un proyecto nuevo o una feature importante:
+
+1. **Instalar herramientas** — Configurar el entorno de desarrollo y las herramientas de análisis en el directorio del proyecto
+2. **Modo plan** — Antes de escribir código, generar un plan detallado paso a paso con la estrategia de implementación
+3. **Spec-Driven** — Escribir las especificaciones, crear el plan de implementación, ejecutar y verificar contra las specs
+
+---
+
+## 3. Fase 0: Especificación y Plan
+
+### 3.1. Crear Especificaciones Primero
 
 Antes de escribir una línea de código:
 
@@ -76,7 +116,7 @@ c) Definir la arquitectura general
 d) Documentar flujos clave (request/response, datos, autenticación, etc.)
 e) Incluir tabla de variables de entorno con valores por defecto
 
-### 2.2. Crear el Plan Después
+### 3.2. Crear el Plan Después
 
 a) Dividir la implementación en fases ordenadas por dependencia
 b) Cada fase debe tener checkboxes accionables
@@ -84,7 +124,7 @@ c) Las fases deben ir de lo fundamental a lo específico
 d) Incluir comandos exactos de instalación y verificación
 e) Incluir notas técnicas sobre decisiones importantes
 
-### 2.3. Mantener Ambos Actualizados
+### 3.3. Mantener Ambos Actualizados
 
 Cada vez que se implementa un cambio significativo:
 
@@ -94,19 +134,19 @@ c) Si se descubre algo que contradice el plan, corregir el plan (no el código)
 
 ---
 
-## 3. Stack y Dependencias
+## 4. Stack y Dependencias
 
-### 3.1. Versiones Explícitas
+### 4.1. Versiones Explícitas
 
 Registrar en las especificaciones las versiones exactas o rangos de cada tecnología. NO dejar versiones "latest" sin control. Cada ecosistema tiene su mecanismo de lock de versiones — usarlo desde el día 1.
 
-### 3.2. Clasificar Dependencias
+### 4.2. Clasificar Dependencias
 
 - **Producción:** Necesarias para que la aplicación funcione en runtime
 - **Desarrollo:** Herramientas, bundlers, CLIs, testing frameworks
 - **Peer/Solo:** Dependencias opcionales o que el consumidor debe proporcionar
 
-### 3.3. Mínimo Necesario
+### 4.3. Mínimo Necesario
 
 Cada dependencia debe justificarse respondiendo tres preguntas:
 
@@ -114,7 +154,7 @@ Cada dependencia debe justificarse respondiendo tres preguntas:
 2. ¿Podemos resolverlo con las capacidades nativas del lenguaje?
 3. ¿El beneficio justifica el costo (tamaño, complejidad, superficie de ataque, mantenimiento)?
 
-### 3.4. Sources of Truth para Versiones
+### 4.4. Sources of Truth para Versiones
 
 No asumir. Investigar en:
 
@@ -123,19 +163,19 @@ No asumir. Investigar en:
 - Registry del ecosistema
 - Documentación oficial
 
-### 3.5. Actualizar Registro
+### 4.5. Actualizar Registro
 
 Cuando se agrega una dependencia, actualizar el archivo de especificaciones. Si una herramienta instala dependencias automáticamente, revisar el archivo de manifest/lock después para registrar los cambios.
 
 ---
 
-## 4. Arquitectura y Diseño
+## 5. Arquitectura y Diseño
 
-### 4.1. Entrypoint Único
+### 5.1. Entrypoint Único
 
 La aplicación debe tener un solo punto de entrada claro, documentado en las especificaciones.
 
-### 4.2. Separación de Responsabilidades
+### 5.2. Separación de Responsabilidades
 
 Cada capa tiene una función única:
 
@@ -146,18 +186,18 @@ Cada capa tiene una función única:
 
 NO mezclar responsabilidades en un mismo archivo. Si un archivo hace dos cosas, divídelo.
 
-### 4.3. Flujos Documentados
+### 5.3. Flujos Documentados
 
 Cada flujo importante (request/response, build, deploy, autenticación) debe documentarse paso a paso en las especificaciones.
 
-### 4.4. Configuración por Entorno
+### 5.4. Configuración por Entorno
 
 a) Variables de entorno para configuración (puerto, modo, URL de base de datos)
 b) Valores por defecto sensatos que permitan desarrollo sin configuración manual
 c) Archivo de configuración local con valores de desarrollo (no versionado)
 d) Documentar cada variable en una tabla con: nombre, valor por defecto, descripción, si es requerida
 
-### 4.5. Nombres de Archivos
+### 5.5. Nombres de Archivos
 
 - Seguir la convención del lenguaje/framework elegido (kebab-case, snake_case, PascalCase, etc.)
 - Ser consistente en todo el proyecto: no mezclar estilos de nomenclatura
@@ -165,15 +205,15 @@ d) Documentar cada variable en una tabla con: nombre, valor por defecto, descrip
 
 ---
 
-## 5. Estándares de Código
+## 6. Estándares de Código
 
-### 5.1. Tipado y Validación
+### 6.1. Tipado y Validación
 
 - Usar el sistema de tipos del lenguaje de forma estricta cuando esté disponible
 - Tipar todo: parámetros, retornos, estados
 - Evitar tipos débiles o genéricos a menos que sea unavoidable y esté documentado
 
-### 5.2. Comentarios en Código
+### 6.2. Comentarios en Código
 
 El código debe ser autoexplicativo. Los comentarios deben explicar **por qué**, no **qué**:
 
@@ -182,14 +222,14 @@ El código debe ser autoexplicativo. Los comentarios deben explicar **por qué**
 
 Los comentarios se desactualizan; el código compilado no miente.
 
-### 5.3. Convenciones
+### 6.3. Convenciones
 
 a) Seguir las convenciones del lenguaje/framework elegido
 b) Ser consistente: una vez que se elige un patrón, usarlo en todo el proyecto
 c) Preferir inmutabilidad cuando el lenguaje lo permita
 d) Nombres descriptivos sobre abreviaciones
 
-### 5.4. Organización de Módulos
+### 6.4. Organización de Módulos
 
 a) Ordenar imports: estándar del lenguaje primero, luego terceros, luego internos
 b) Usar aliases o módulos organizados si el ecosistema lo soporta
@@ -197,42 +237,42 @@ c) No importar lo que no se usa
 
 ---
 
-## 6. Componentes y Librerías Externas
+## 7. Componentes y Librerías Externas
 
-### 6.1. Instalar Tal Cual, No Modificar
+### 7.1. Instalar Tal Cual, No Modificar
 
 Los componentes de librerías externas que se copian al proyecto deben quedar **exactamente** como los genera la herramienta de instalación. Si se necesita modificar, crear un wrapper propio encima.
 
-### 6.2. CLI vs. Guías de Composición
+### 7.2. CLI vs. Guías de Composición
 
 Algunos componentes son instalables vía CLI y otros solo documentados como guías de composición. Identificar cuál es cuál en la documentación oficial antes de asumir.
 
-### 6.3. Providers y Configuración Inicial
+### 7.3. Providers y Configuración Inicial
 
 Identificar qué componentes requieren configuración a nivel de aplicación (providers, inicialización, plugins) y agregarlos en el entrypoint correspondiente **inmediatamente después** de instalar el componente.
 
-### 6.4. Wrappers de Terceros
+### 7.4. Wrappers de Terceros
 
 Si un componente wrapper depende de un contexto que no existe en el proyecto, usar la librería base directamente en lugar de instalar dependencias pesadas innecesarias.
 
 ---
 
-## 7. Manejo de Errores y Resiliencia
+## 8. Manejo de Errores y Resiliencia
 
-### 7.1. Nunca Crashear el Proceso
+### 8.1. Nunca Crashear el Proceso
 
 a) Cada handler/punto de entrada debe tener manejo de errores
 b) Un handler global debe capturar errores no manejados
 c) Nunca dejar que una excepción crashee el proceso sin intentar recuperación
 d) Responder al usuario/cliente con mensajes útiles (no stack traces)
 
-### 7.2. Logging Estructurado
+### 8.2. Logging Estructurado
 
 a) Loggear el error completo con contexto suficiente para diagnosticarlo
 b) Incluir: timestamp, nivel, módulo, acción que falló, datos relevantes (sin secretos)
 c) En producción, usar formato estructurado (JSON) para facilitar la búsqueda
 
-### 7.3. Errores Específicos vs. Genéricos
+### 8.3. Errores Específicos vs. Genéricos
 
 a) Capturar errores específicos cuando se pueda hacer algo al respecto (reintentar, fallback, notificar)
 b) Captura genérica como safety net, no como estrategia principal
@@ -240,29 +280,29 @@ c) Definir tipos de error propios del dominio
 
 ---
 
-## 8. Seguridad
+## 9. Seguridad
 
-### 8.1. Principios Fundamentales
+### 9.1. Principios Fundamentales
 
 a) **Nunca confiar en la entrada del usuario:** Validar y sanitizar toda entrada externa
 b) **Principio de mínimo privilegio:** Cada componente solo tiene acceso a lo que necesita
 c) **Defensa en profundidad:** Múltiples capas de seguridad, no una sola
 
-### 8.2. Gestión de Secretos
+### 9.2. Gestión de Secretos
 
 a) **Nunca** hardcodear secretos en el código fuente
 b) Usar variables de entorno o un gestor de secretos dedicado
 c) Rotar secretos periódicamente
 d) Tener un plan para revocar secretos comprometidos
 
-### 8.3. Autenticación y Autorización
+### 9.3. Autenticación y Autorización
 
 a) Usar frameworks/librerías probadas para autenticación (no implementar desde cero)
 b) Hashear contraseñas con algoritmos seguros (bcrypt, Argon2) — nunca MD5 ni SHA1
 c) Implementar rate limiting en endpoints de autenticación
 d) Usar HTTPS obligatoriamente en producción
 
-### 8.4. Protección de Datos
+### 9.4. Protección de Datos
 
 a) Sanitizar outputs para prevenir XSS
 b) Usar consultas parametrizadas para prevenir inyección SQL
@@ -271,29 +311,29 @@ d) Implementar CORS de forma restrictiva
 
 ---
 
-## 9. Entorno de Desarrollo
+## 10. Entorno de Desarrollo
 
-### 9.1. Scripts Claros
+### 10.1. Scripts Claros
 
 a) **`dev`:** Inicia todo lo necesario para desarrollo (servidor, watchers, hot-reload)
 b) **`build`:** Compila todo para producción
 c) **`start`:** Ejecuta el build de producción
 d) Scripts auxiliares con prefijo descriptivo
 
-### 9.2. Hot Reload
+### 10.2. Hot Reload
 
 a) Usar watch mode del runtime/bundler para reinicio automático al guardar
 b) Hot-reload de estilos en paralelo al servidor
 c) Asegurar que los procesos hijos (watchers) no queden huérfanos al hacer Ctrl+C
 
-### 9.3. Variables de Entorno
+### 10.3. Variables de Entorno
 
 a) Valores por defecto para desarrollo que permitan arrancar sin configuración
 b) Archivo de configuración local en `.gitignore`
 c) Archivo de ejemplo **versionado** como referencia (`.env.example` o equivalente)
 d) Valores sensibles **NUNCA** en el repositorio
 
-### 9.4. Puerto Dedicado
+### 10.4. Puerto Dedicado
 
 a) Puerto fijo para el proyecto (no usar el default del framework)
 b) Documentar el puerto en la configuración de ejemplo y en las especificaciones
@@ -301,20 +341,20 @@ c) Configurable vía variable de entorno
 
 ---
 
-## 10. Build y Despliegue
+## 11. Build y Despliegue
 
-### 10.1. Build Reproducible
+### 11.1. Build Reproducible
 
 a) El build debe ser determinístico: misma entrada → misma salida
 b) Documentar los comandos exactos de build
 c) El build debe funcionar en un entorno limpio (sin dependencias implícitas del sistema)
 
-### 10.2. Artefactos no Versionados
+### 11.2. Artefactos no Versionados
 
 a) Directorios de build en `.gitignore`
 b) Los artefactos compilados se regeneran siempre, no se versionan
 
-### 10.3. Entorno de Producción
+### 11.3. Entorno de Producción
 
 a) Distinguir claramente entre desarrollo y producción mediante variables de entorno
 b) El build de producción debe ser diferente del de desarrollo:
@@ -323,7 +363,7 @@ b) El build de producción debe ser diferente del de desarrollo:
    - Con headers de caché apropiados
    - Sin herramientas de desarrollo
 
-### 10.4. Verificación Pre-Deploy
+### 11.4. Verificación Pre-Deploy
 
 Antes de cada despliegue, verificar:
 
@@ -334,9 +374,9 @@ d) Los assets estáticos se sirven correctamente
 
 ---
 
-## 11. CI/CD y Automatización
+## 12. CI/CD y Automatización
 
-### 11.1. Pipeline Mínimo
+### 12.1. Pipeline Mínimo
 
 Todo proyecto debe tener un pipeline automatizado que ejecute, como mínimo:
 
@@ -345,13 +385,13 @@ Todo proyecto debe tener un pipeline automatizado que ejecute, como mínimo:
 3. **Tests:** Suite de tests automatizados
 4. **Build:** Compilación del proyecto
 
-### 11.2. Ramas y Despliegue
+### 12.2. Ramas y Despliegue
 
 a) Definir una estrategia de ramas clara (trunk-based, gitflow, etc.)
 b) Los merges a la rama principal solo deben ocurrir si el pipeline pasa
 c) El despliegue a producción debe ser automático o de un solo comando
 
-### 11.3. Hooks de Control de Calidad
+### 12.3. Hooks de Control de Calidad
 
 a) Usar hooks pre-commit para formateo automático y linting
 b) Usar hooks pre-push para ejecutar tests rápidos
@@ -359,21 +399,21 @@ c) Automatizar todo lo que sea repetible; no confiar en la disciplina humana
 
 ---
 
-## 12. Monitoreo y Observabilidad
+## 13. Monitoreo y Observabilidad
 
-### 12.1. Logging en Producción
+### 13.1. Logging en Producción
 
 a) Logs estructurados (JSON) con campos consistentes
 b) Niveles claros: DEBUG, INFO, WARN, ERROR, FATAL
 c) No loggear información sensible (contraseñas, tokens, datos personales)
 
-### 12.2. Health Checks
+### 13.2. Health Checks
 
 a) Exponer un endpoint de salud que verifique dependencias críticas
 b) Incluir verificación de conectividad a base de datos y servicios externos
 c) Usar para alertas automatizadas y balanceo de carga
 
-### 12.3. Métricas y Alertas
+### 13.3. Métricas y Alertas
 
 a) Monitorear: latencia de respuesta, tasa de error, uso de recursos
 b) Configurar alertas para umbrales críticos
@@ -381,15 +421,15 @@ c) Tener un dashboard accesible para el equipo
 
 ---
 
-## 13. Rendimiento
+## 14. Rendimiento
 
-### 13.1. Principios Generales
+### 14.1. Principios Generales
 
 a) Medir antes de optimizar — no optimizar prematuramente
 b) Establecer benchmarks y métricas de rendimiento desde el inicio
 c) Documentar los límites de rendimiento aceptables en las especificaciones
 
-### 13.2. Estrategias Comunes
+### 14.2. Estrategias Comunes
 
 a) **Caché:** Implementar en capas apropiadas (HTTP, aplicación, base de datos)
 b) **Paginación:** Nunca retornar colecciones completas sin límite
@@ -397,7 +437,7 @@ c) **Índices:** Asegurar que las consultas frecuentes estén indexadas
 d) **Compresión:** Habilitar compresión para respuestas HTTP
 e) **Lazy loading:** Cargar recursos solo cuando se necesitan
 
-### 13.3. Prevención de Degradación
+### 14.3. Prevención de Degradación
 
 a) Rate limiting para proteger contra abuso
 b) Timeouts en llamadas a servicios externos
@@ -406,9 +446,9 @@ d) Connection pooling para bases de datos
 
 ---
 
-## 14. Verificación y Pruebas
+## 15. Verificación y Pruebas
 
-### 14.1. Estrategia de Testing
+### 15.1. Estrategia de Testing
 
 Definir qué se prueba y con qué nivel de detalle:
 
@@ -418,14 +458,14 @@ Definir qué se prueba y con qué nivel de detalle:
 | **Integration** | Interacción entre módulos | Medio | Moderados |
 | **E2E** | Flujos completos de usuario | Lento | Pocos |
 
-### 14.2. Verificar Después de Cada Cambio
+### 15.2. Verificar Después de Cada Cambio
 
 a) Compilar sin errores
 b) Ejecutar suite de tests
 c) Probar endpoints/rutas principales
 d) Verificar status codes correctos
 
-### 14.3. Comandos de Verificación
+### 15.3. Comandos de Verificación
 
 Incluir en la documentación comandos exactos para verificar:
 
@@ -434,31 +474,85 @@ Incluir en la documentación comandos exactos para verificar:
 - Respuesta del servidor
 - Manejo de errores (rutas inexistentes, errores 500)
 
-### 14.4. Lo que No se Compila, No Existe
+### 15.4. Lo que No se Compila, No Existe
 
 Si no compila, no funciona. Si no se puede verificar, no está completo. El proyecto debe poder verificarse con comandos simples ejecutables por cualquier desarrollador.
 
 ---
 
-## 15. Accesibilidad
+## 16. Checklist de Auditoría y Consultas
+
+Antes de dar por completada una fase, un feature o el proyecto completo, ejecutar este checklist. Cada punto es una pregunta que debe tener una respuesta documentada.
+
+### 16.1. Coherencia y Calidad del Código
+
+- [ ] ¿El código es coherente con las convenciones establecidas en las especificaciones?
+- [ ] ¿Se realizó una auditoría del código antes de merge?
+- [ ] ¿Se aprovechan los beneficios nativos de cada tecnología instalada?
+- [ ] ¿Se aplicaron las correcciones necesarias identificadas en la auditoría?
+
+### 16.2. Flujo de Procesos y Funcionalidad
+
+- [ ] ¿El flujo de procesos está documentado y es verificable?
+- [ ] ¿Todos los CRUDs son funcionales y completos (Create, Read, Update, Delete)?
+- [ ] ¿Se verificó el aislamiento entre módulos/componentes?
+- [ ] ¿Se verificó que no existen problemas de N+1 en las consultas a datos?
+- [ ] ¿Se escribieron tests completos para cada flujo?
+
+### 16.3. Base de Datos y Persistencia
+
+- [ ] ¿Las tablas de la base de datos están alineadas con el modelo de datos de las especificaciones?
+- [ ] ¿En sistemas multi-tenant, las tablas necesarias se crean en cada tenant?
+- [ ] ¿Las migraciones son reversibles y están versionadas?
+
+### 16.4. Seguridad y Red
+
+- [ ] ¿Se revisaron los puertos abiertos del servidor?
+- [ ] ¿Se verificó el nivel de seguridad del sistema?
+- [ ] ¿Los endpoints públicos tienen autenticación y autorización?
+- [ ] ¿Los datos sensibles están protegidos en tránsito y en reposo?
+
+### 16.5. Interfaz y Experiencia de Usuario
+
+- [ ] ¿Los formularios están distribuidos de manera coherente, responsive y adaptada a cada dispositivo?
+- [ ] ¿Se realizó simulación de navegador para verificar la experiencia?
+- [ ] ¿Se ejecutaron pruebas de navegador en múltiples dispositivos y resoluciones?
+
+### 16.6. Documentación y Proceso
+
+- [ ] ¿Se aplicó la metodología spec-driven (el "qué" en `/spec` y el "cómo" en `/plan`)?
+- [ ] ¿Se documentaron las especificaciones del plan de creación?
+- [ ] ¿Se documentaron las especificaciones del plan de integración?
+- [ ] ¿Se generó un resumen de lo realizado?
+
+### 16.7. Verificación Final
+
+- [ ] ¿La aplicación inicia en segundo plano sin errores?
+- [ ] ¿Los logs no muestran errores ni advertencias críticas?
+- [ ] ¿Todos los tests pasan?
+- [ ] ¿El build de producción funciona correctamente?
+
+---
+
+## 17. Accesibilidad
 
 > **Nota:** Esta sección aplica principalmente a proyectos con interfaz de usuario (web, móvil, desktop).
 
-### 15.1. Estándar Mínimo
+### 17.1. Estándar Mínimo
 
 a) Cumplir al menos WCAG 2.1 nivel AA
 b) Toda interacción debe ser accesible por teclado
 c) Todo contenido visual debe tener alternativa textual apropiada
 d) El contraste de colores debe cumplir ratios mínimos (4.5:1 para texto normal)
 
-### 15.2. Prácticas de Desarrollo
+### 17.2. Prácticas de Desarrollo
 
 a) Usar semántica correcta en los elementos de interfaz
 b) Probar con lectores de pantalla periódicamente
 c) No depender exclusivamente del color para transmitir información
 d) Asegurar que los formularios tengan labels asociados
 
-### 15.3. Testing de Accesibilidad
+### 17.3. Testing de Accesibilidad
 
 a) Incluir tests automatizados de accesibilidad en el pipeline
 b) Realizar pruebas manuales con lectores de pantalla al menos una vez por sprint
@@ -466,4 +560,4 @@ c) Documentar y trackear issues de accesibilidad como bugs prioritarios
 
 ---
 
-*FIN DE LA GUÍA — v3.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
+*FIN DE LA GUÍA — v4.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
