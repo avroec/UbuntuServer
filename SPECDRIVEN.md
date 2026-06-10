@@ -731,6 +731,7 @@ d) **Cobertura de specs:** ¿Qué porcentaje del proyecto tiene specs actualizad
 | **Checklist de auditoría** | Lista de verificación que se ejecuta antes de dar por completada una fase o el proyecto, cubriendo calidad de código, funcionalidad, seguridad, documentación y verificación final. |
 | **Reproducibilidad** | Capacidad de construir el proyecto desde cero siguiendo solo la documentación. |
 | **Wrapper** | Capa de abstracción propia que envuelve una librería externa para adaptarla a las necesidades del proyecto. |
+| **AGENTS.md** | Archivo Markdown en la raíz del proyecto que actúa como manual de instrucciones para asistentes de IA, definiendo contexto, restricciones y comandos de verificación. |
 
 ---
 
