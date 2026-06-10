@@ -1,6 +1,6 @@
 # Guía de Lineamientos y Buenas Prácticas para Creación de Proyectos
 
-**Versión:** 6.0
+**Versión:** 7.0
 
 Este documento establece los principios, estándares y procesos que deben seguirse al crear y mantener un proyecto de software. Las recomendaciones aquí descritas aplican a cualquier lenguaje, framework o plataforma. El enfoque está en **cómo pensar y planificar**, no en qué herramientas específicas usar.
 
@@ -27,6 +27,7 @@ Este documento establece los principios, estándares y procesos que deben seguir
 17. [Accesibilidad](#17-accesibilidad)
 18. [Adopción y Migración](#18-adopción-y-migración)
 19. [Glosario](#19-glosario)
+20. [Guía para AGENTS.md](#20-guía-para-agentsmd)
 
 ---
 
@@ -733,4 +734,408 @@ d) **Cobertura de specs:** ¿Qué porcentaje del proyecto tiene specs actualizad
 
 ---
 
-*FIN DE LA GUÍA — v6.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
+## 20. Guía para AGENTS.md
+
+`AGENTS.md` es un archivo Markdown que actúa como **manual de instrucciones para asistentes de IA** (Cursor, Copilot, Claude, Codebuff, Windsurf, etc.). Cuando un agente de IA inicia trabajo en un proyecto, este archivo es su primera fuente de contexto.
+
+> **Analogía:** Si `README.md` es el manual del usuario, `AGENTS.md` es el manual del operador.
+
+### 20.1. Relación con Spec-Driven
+
+`AGENTS.md` actúa como **puente operativo** entre los tres pilares y el agente de IA:
+
+```
+/spec/  →  qué hacer
+         ↓
+/plan/  →  cómo hacerlo
+         ↓
+AGENTS.md  →  instrucciones concretas para el agente de IA
+         ↓
+/.skills/ →  especializaciones por dominio
+```
+
+**Regla fundamental:** `AGENTS.md` nunca contradice `/spec` o `/plan`. Si hay conflicto, spec y plan tienen prioridad.
+
+### 20.2. Ubicación en el Proyecto
+
+```
+/proyecto/
+├── AGENTS.md              ← Archivo principal (raíz)
+├── /spec/                 ← Especificaciones
+│   ├── SPEC.md
+│   └── auth-spec.md
+├── /plan/                 ← Plan de implementación
+│   ├── PLAN.md
+│   └── auth-plan.md
+├── /.skills/              ← Agentes especializados
+│   ├── security-agent.md
+│   └── testing-agent.md
+├── README.md
+└── ...
+```
+
+**Reglas de ubicación:**
+- `AGENTS.md` siempre va en la **raíz** del proyecto
+- En monorepos, se pueden agregar `AGENTS.md` adicionales en subdirectorios
+- El `AGENTS.md` de raíz es el que tienen prioridad los agentes
+
+### 20.3. Estructura Recomendada
+
+La estructura de `AGENTS.md` debe seguir este orden:
+
+```markdown
+# AGENTS.md
+
+## 1. Contexto del Proyecto
+## 2. Fuente de Verdad
+## 3. Comandos de Verificación
+## 4. Convenciones de Código
+## 5. Lo que NO se debe hacer
+## 6. Flujo de Trabajo
+## 7. Agentes por Fase
+## 8. Checklists de Calidad
+```
+
+> **Por qué este orden:** Los agentes de IA leen de arriba a abajo. Lo más importante (contexto y restricciones) va primero.
+
+### 20.4. Secciones Obligatorias
+
+#### 20.4.1. Contexto del Proyecto
+
+Descripción breve del proyecto, su stack tecnológico, y su arquitectura general.
+
+```markdown
+## Contexto del Proyecto
+
+- **Nombre:** [Nombre del proyecto]
+- **Stack:** [Tecnologías principales]
+- **Arquitectura:** [Estilo arquitectónico — MVC, Clean Architecture, etc.]
+- **Propósito:** [Qué resuelve el proyecto en una línea]
+```
+
+#### 20.4.2. Fuente de Verdad
+
+Indicar explícitamente qué archivos son la fuente de verdad.
+
+```markdown
+## Fuente de Verdad
+
+- `/spec/SPEC.md` → Especificación general del sistema
+- `/plan/PLAN.md` → Plan de implementación
+- `/.skills/` → Agentes especializados
+
+**Nunca modificar** estos archivos a menos que se pida explícitamente.
+Si el código difiere de la spec, corregir el código.
+```
+
+#### 20.4.3. Comandos de Verificación
+
+Lista de comandos exactos que el agente debe ejecutar para validar cambios.
+
+```markdown
+## Comandos de Verificación
+
+### Compilación
+[comando de build]
+
+### Tests
+[comando de tests]
+
+### Lint
+[comando de lint]
+
+### Type Check
+[comando de typecheck]
+
+### Iniciar servidor
+[comando de dev]
+
+**Siempre ejecutar estos comandos antes de declarar una tarea completa.**
+```
+
+#### 20.4.4. Convenciones de Código
+
+```markdown
+## Convenciones de Código
+
+- **Lenguaje:** [Nombre del lenguaje]
+- **Estilo:** [Formato — Prettier, Black, etc.]
+- **Nomenclatura de archivos:** [kebab-case, snake_case, PascalCase]
+- **Imports:** [Orden — estándar, terceros, internos]
+- **Tipado:** [Estricto, nominal, structural]
+- **Comentarios:** [Solo el por qué, nunca el qué]
+```
+
+#### 20.4.5. Lo que NO se debe hacer
+
+Lista explícita de restricciones. Los agentes de IA responden mejor a restricciones claras que a sugerencias vagas.
+
+```markdown
+## Lo que NO se debe hacer
+
+- ❌ No instalar dependencias nuevas sin justificación documentada en `/spec`
+- ❌ No modificar archivos en `/spec/`, `/plan/` o `/.skills/` a menos que se pida
+- ❌ No usar tipos `any` o equivalentes
+- ❌ No hardcodear valores que debieran ser variables de entorno
+- ❌ No cambiar la arquitectura sin actualizar la spec primero
+- ❌ No ejecutar `git push` sin confirmación explícita del usuario
+- ❌ No eliminar código existente sin verificar que no tiene dependencias
+```
+
+### 20.5. Secciones Opcionales
+
+#### 20.5.1. Variables de Entorno
+
+```markdown
+## Variables de Entorno
+
+| Variable | Requerida | Default | Descripción |
+|----------|-----------|---------|-------------|
+| `PORT` | No | `3000` | Puerto del servidor |
+| `DATABASE_URL` | Sí | — | URL de conexión a la DB |
+| `NODE_ENV` | No | `development` | Modo de ejecución |
+```
+
+#### 20.5.2. Estructura de Directorios
+
+```markdown
+## Estructura del Proyecto
+
+/src
+├── /handlers      → Controllers/Rutas
+├── /services      → Lógica de negocio
+├── /models        → Modelos de datos
+├── /middleware     → Middlewares
+├── /utils         → Utilidades
+└── app.ts         → Entrypoint
+```
+
+#### 20.5.3. Patrones de Error
+
+```markdown
+## Manejo de Errores
+
+- Todos los handlers deben tener try/catch
+- Usar el tipo de error definido en `src/errors/`
+- Responder con formato: `{ error: string, code: number, details?: any }`
+- Loggear errores con `logger.error()` antes de responder
+```
+
+#### 20.5.4. Estrategia de Testing
+
+```markdown
+## Testing
+
+- **Framework:** [Nombre]
+- **Ubicación:** Los tests van junto a los archivos que testean (co-location)
+- **Convención de nombre:** `[nombre].test.[ext]` o `[nombre].spec.[ext]`
+- **Cobertura mínima:** [Porcentaje o criterio]
+```
+
+### 20.6. Plantilla Base
+
+Copia esta plantilla y personalízala para tu proyecto:
+
+```markdown
+# AGENTS.md
+
+> Este archivo contiene instrucciones para asistentes de IA que trabajan en
+> este proyecto. Siempre consultar `/spec/` y `/plan/` para decisiones de
+> diseño e implementación.
+
+## Contexto del Proyecto
+
+- **Nombre:** [Tu proyecto]
+- **Stack:** [Tecnologías]
+- **Arquitectura:** [Estilo]
+- **Propósito:** [Qué resuelve]
+
+## Fuente de Verdad
+
+- `/spec/SPEC.md` → Qué hace el sistema
+- `/plan/PLAN.md` → Cómo se implementa
+- `/.skills/` → Agentes especializados
+- `AGENTS.md` → Este archivo (instrucciones para el agente)
+
+**Regla:** Si el código difiere de la spec, corregir el código.
+
+## Comandos de Verificación
+
+[comandos de build, test, lint, dev]
+
+## Convenciones de Código
+
+- **Lenguaje:** [Lenguaje]
+- **Estilo:** [Formatter]
+- **Archivos:** [Convención de nombre]
+- **Imports:** [Orden]
+- **Tipado:** [Estricto/No]
+
+## Lo que NO se debe hacer
+
+- ❌ No modificar `/spec/`, `/plan/` o `/.skills/` sin pedido explícito
+- ❌ No instalar dependencias sin justificación
+- ❌ No usar tipos débiles
+- ❌ No hardcodear secretos
+- ❌ No cambiar arquitectura sin actualizar spec
+- ❌ No hacer push sin confirmación
+
+## Variables de Entorno
+
+[tabla de variables]
+
+## Estructura del Proyecto
+
+[mapa de directorios]
+
+## Agentes por Fase
+
+Cada agente en esta tabla corresponde a un archivo en `/.skills/`.
+
+| Fase | Agente | Archivo en /.skills/ | Responsabilidad | Paralelizable |
+|------|--------|---------------------|-----------------|---------------|
+| Análisis | Analista | `analyst-agent.md` | Revisar spec | No |
+| Planificación | Planificador | `planner-agent.md` | Crear plan | No |
+| Implementación | Desarrollador | `dev-agent.md` | Escribir código | Sí (con Instalador) |
+| Verificación | Tester | `tester-agent.md` | Ejecutar tests | Sí (con Linter) |
+| Verificación | Linter | `linter-agent.md` | Verificar estilo | Sí (con Tester) |
+| Auditoría | Auditor Seguridad | `security-agent.md` | Revisar vulnerabilidades | Sí (con Rendimiento) |
+| Auditoría | Auditor Rendimiento | `perf-agent.md` | Revisar performance | Sí (con Seguridad) |
+| Despliegue | Deployer | `deploy-agent.md` | Desplegar | No |
+```
+
+### 20.7. Cómo Referenciar /spec y /plan
+
+El `AGENTS.md` debe indicar al agente **dónde buscar** las especificaciones y el plan, pero **no duplicar** su contenido.
+
+**Reglas de Referencia:**
+
+1. **Nunca copiar contenido** de `/spec` o `/plan` dentro de `AGENTS.md`
+2. **Siempre usar rutas relativas** para referenciar archivos
+3. **Indicar al agente** que lea los archivos relevantes antes de implementar
+
+**Referencia Correcta:**
+```markdown
+1. Leer la especificación correspondiente en `/spec/[feature]-spec.md`
+2. Revisar el plan en `/plan/[feature]-plan.md`
+3. Implementar siguiendo el plan fase por fase
+```
+
+**Referencia Incorrecta:**
+```markdown
+## ❌ NO hacer esto:
+## El sistema debe usar JWT con tokens de 24h de duración,
+## refresh tokens de 7 días, y rate limiting de 100 req/min.
+## (Esto debería estar en /spec, no en AGENTS.md)
+```
+
+### 20.8. Agentes por Fase del Ciclo
+
+El `AGENTS.md` debe mapear qué agente ejecuta en cada fase del ciclo Spec-Driven. Cada agente tiene un **alcance definido**, **herramientas disponibles**, y **criterios de éxito**.
+
+> **Paralelismo:** Algunos agentes pueden ejecutarse en paralelo cuando no tienen dependencias entre sí (ej: Linter y Tester en Fase 4).
+
+#### Fase 1: Análisis y Especificación
+
+| Agente | Rol | Herramientas | Inputs | Outputs | Criterio de Éxito |
+|--------|-----|-------------|--------|---------|-------------------|
+| **Analista** | Revisar que la spec sea completa | Lector de archivos, web search | Requisitos del usuario | Spec revisada | Todos los items de 2.2.1 cumplidos |
+| **Validador** | Verificar criterios de validación | Lector de archivos | Spec | Checklist 2.2.1 completado | 6/6 criterios aprobados |
+
+> **Escalamiento:** Si el Analista detecta requisitos ambiguos, escalar al usuario antes de continuar.
+
+#### Fase 2: Planificación
+
+| Agente | Rol | Herramientas | Inputs | Outputs | Criterio de Éxito |
+|--------|-----|-------------|--------|---------|-------------------|
+| **Planificador** | Crear/modificar el plan | Lector de archivos, editor | Spec validada | Plan con fases y checkboxes | Cada fase tiene dependencias claras |
+| **Arquitecto** | Verificar coherencia técnica | Lector de archivos, code search | Spec + Plan | Plan revisado | Sin contradicciones con la spec |
+
+> **Escalamiento:** Si el Planificador detecta que la spec es insuficiente, pedir revisión al Analista.
+
+#### Fase 3: Implementación
+
+| Agente | Rol | Herramientas | Inputs | Outputs | Criterio de Éxito |
+|--------|-----|-------------|--------|---------|-------------------|
+| **Desarrollador** | Escribir código según spec/plan | Editor, terminal, code search | Spec + Plan | Código funcional | Compila sin errores, cumple spec |
+| **Instalador** | Gestionar dependencias | Terminal, package manager | Plan | Packages instalados | Dependencias justificadas en spec |
+
+> **Escalamiento:** Si el Desarrollador detecta que algo de la spec no es implementable, escalar al Planificador.
+
+#### Fase 4: Verificación
+
+| Agente | Rol | Herramientas | Inputs | Outputs | Criterio de Éxito |
+|--------|-----|-------------|--------|---------|-------------------|
+| **Tester** | Ejecutar suite de tests | Terminal | Código + Spec | Tests pasando | 100% tests pasan |
+| **Linter** | Verificar estilo y convenciones | Terminal | Código | Sin warnings | 0 warnings |
+| **Tipador** | Verificar tipos | Terminal | Código | Sin errores de tipo | 0 errores |
+
+> **Escalamiento:** Si el Tester encuentra bugs, escalar al Desarrollador.
+
+#### Fase 5: Auditoría
+
+| Agente | Rol | Herramientas | Inputs | Outputs | Criterio de Éxito |
+|--------|-----|-------------|--------|---------|-------------------|
+| **Auditor de seguridad** | Revisar vulnerabilidades | Lector de archivos, code search, terminal | Código | Reporte de seguridad | Sin vulnerabilidades críticas |
+| **Auditor de rendimiento** | Revisar performance | Lector de archivos, terminal | Código | Métricas | Dentro de benchmarks aceptables |
+| **Revisor final** | Checklist 16 completo | Lector de archivos | Todo | Checklist aprobado | Todos los items aprobados |
+
+> **Escalamiento:** Si el Auditor detecta vulnerabilidades críticas, bloquear el despliegue hasta resolución.
+
+#### Fase 6: Despliegue
+
+| Agente | Rol | Herramientas | Inputs | Outputs | Criterio de Éxito |
+|--------|-----|-------------|--------|---------|-------------------|
+| **Build** | Ejecutar build de producción | Terminal | Código verificado | Artefacto | Build determinístico |
+| **Deployer** | Desplegar | Terminal, git | Build verificado | Deploy exitoso | Health check pasa |
+
+> **Escalamiento:** Si el Build falla, escalar al Desarrollador. Si el Deploy falla, escalar al equipo.
+
+### 20.9. Reglas de Mantenimiento
+
+| Evento | Acción |
+|--------|--------|
+| Cambio de stack tecnológico | Actualizar sección "Contexto del Proyecto" |
+| Nuevo comando de verificación | Agregar a "Comandos de Verificación" |
+| Nueva restricción | Agregar a "Lo que NO se debe hacer" |
+| Nueva variable de entorno | Agregar a la tabla de variables |
+| Cambio de arquitectura | Actualizar "Estructura del Proyecto" |
+| Nuevo agente especializado | Actualizar "Agentes por Fase" |
+
+**Quién Actualiza:**
+- **Desarrolladores humanos:** Actualizan cuando hay cambios estructurales
+- **Agentes de IA:** Pueden sugerir actualizaciones, pero no aplicarlas sin confirmación
+- **Al actualizar:** Verificar que no contradiga `/spec` ni `/plan`
+
+### 20.10. Checklist de Revisión de AGENTS.md
+
+Antes de dar por completado un `AGENTS.md`, verificar:
+
+**Contenido:**
+- [ ] El contexto del proyecto es claro y actualizado
+- [ ] La fuente de verdad está definida explícitamente
+- [ ] Los comandos de verificación funcionan (probar cada uno)
+- [ ] Las convenciones de código son consistentes con el proyecto
+- [ ] Las restricciones son claras y sin ambigüedades
+
+**Referencias:**
+- [ ] `/spec/` se referencia correctamente (sin duplicar contenido)
+- [ ] `/plan/` se referencia correctamente
+- [ ] `/.skills/` se referencia correctamente
+- [ ] No hay contradicciones entre AGENTS.md y los archivos de spec/plan
+
+**Mantenimiento:**
+- [ ] La versión está documentada
+- [ ] Las variables de entorno están actualizadas
+- [ ] La estructura de directorios refleja el estado actual
+- [ ] Los agentes por fase cubren todo el ciclo Spec-Driven
+
+**Usabilidad para Agentes:**
+- [ ] Las instrucciones son accionables (comandos, no descripciones)
+- [ ] Las restricciones son explícitas (❌ NO hacer X)
+- [ ] El orden prioriza lo más importante primero
+- [ ] No hay información redundante
+
+---
+
+*FIN DE LA GUÍA — v7.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
