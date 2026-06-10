@@ -1,6 +1,6 @@
 # Guía de Lineamientos y Buenas Prácticas para Creación de Proyectos
 
-**Versión:** 4.0
+**Versión:** 5.0
 
 Este documento establece los principios, estándares y procesos que deben seguirse al crear y mantener un proyecto de software. Las recomendaciones aquí descritas aplican a cualquier lenguaje, framework o plataforma. El enfoque está en **cómo pensar y planificar**, no en qué herramientas específicas usar.
 
@@ -88,19 +88,54 @@ El ciclo se repite para cada feature o componente:
 5. **Verificar** — Confirmar que la implementación cumple las specs (tests, auditoría, revisión)
 6. **Iterar** — Si la verificación falla, corregir la implementación o ajustar las specs
 
-### 2.3. Regla de Oro: el "qué" y el "cómo"
+### 2.3. Regla de Oro: el "qué", el "cómo" y el "quién"
 
 - **`/spec`** define el *qué*: qué hace el sistema, qué datos maneja, qué restricciones tiene
 - **`/plan`** define el *cómo*: cómo se implementa, qué pasos seguir, qué orden respetar
-- El código es la consecuencia de ambos, nunca la fuente de verdad
+- **`/.skills`** define el *quién*: qué expertos ejecutan, verifican y auditan basándose en spec y plan
+- El código es la consecuencia de los tres, nunca la fuente de verdad
+
+> **Importante:** Los skills siempre deben hacer referencia a `/spec` y `/plan`. Si un skill contradice una especificación o el plan, el skill está mal — corregir el skill, no la especificación.
 
 ### 2.4. Flujo de Trabajo Paso a Paso
 
-Para iniciar un proyecto nuevo o una feature importante:
+Para iniciar un proyecto nuevo o una feature importante, crear los directorios en este orden exacto:
 
-1. **Instalar herramientas** — Configurar el entorno de desarrollo y las herramientas de análisis en el directorio del proyecto
-2. **Modo plan** — Antes de escribir código, generar un plan detallado paso a paso con la estrategia de implementación
-3. **Spec-Driven** — Escribir las especificaciones, crear el plan de implementación, ejecutar y verificar contra las specs
+```
+1. /spec/        → Definir el QUÉ
+2. /plan/        → Definir el CÓMO
+3. /.skills/     → Configurar los EXPERTOS que ejecutan basándose en spec y plan
+```
+
+#### Paso 1: Crear `/spec/` — Las Especificaciones
+
+Definir qué debe hacer el sistema antes de cualquier otra cosa. Este directorio contiene:
+
+- El stack tecnológico elegido y por qué
+- Las restricciones del proyecto
+- La arquitectura general
+- Los flujos de datos y procesos
+- Las variables de entorno y su configuración
+
+#### Paso 2: Crear `/plan/` — El Plan de Implementación
+
+Con las especificaciones definidas, crear el plan paso a paso. Este directorio contiene:
+
+- Fases ordenadas por dependencia con checkboxes
+- Comandos exactos de instalación y verificación
+- Notas técnicas sobre decisiones de implementación
+- Criterios de aceptación para cada fase
+
+#### Paso 3: Crear `/.skills/` — Los Expertos
+
+Una vez que `/spec/` y `/plan/` están definidos, configurar los expertos (agents, skills, herramientas de análisis) que trabajarán basándose en lo documentado. Cada skill/experto debe:
+
+- Referenciar explícitamente las secciones relevantes de `/spec/` y `/plan/` que le competen
+- Definir su alcance: qué aspecto del proyecto analiza o implementa
+- Especificar qué debe verificar, qué debe ignorar, y cuándo debe actuar
+- Estar alineado con las especificaciones y el plan, nunca contradecirlos
+
+> **Regla fundamental:** Los skills se crean DESPUÉS de spec y plan porque necesitan saber QUÉ construir y CÓMO hacerlo para poder actuar como expertos. Un skill sin spec y plan es un experto sin contexto.
 
 ---
 
@@ -131,6 +166,9 @@ Cada vez que se implementa un cambio significativo:
 a) Marcar los checkboxes del plan como completados
 b) Actualizar especificaciones si el cambio afecta decisiones previas
 c) Si se descubre algo que contradice el plan, corregir el plan (no el código)
+d) Actualizar los skills que referencien las secciones modificadas de spec y plan
+
+> **Nota:** Para el flujo completo de creación de directorios (spec → plan → skills), consultar la [sección 2.4](#24-flujo-de-trabajo-paso-a-paso).
 
 ---
 
@@ -560,4 +598,4 @@ c) Documentar y trackear issues de accesibilidad como bugs prioritarios
 
 ---
 
-*FIN DE LA GUÍA — v4.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
+*FIN DE LA GUÍA — v5.0 — Principios universales para crear proyectos mantenibles, seguros y robustos*
